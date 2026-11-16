@@ -1,0 +1,680 @@
+{
+  "methods": {
+    "baseline": "Name-only baseline",
+    "baseline_review_matched": "Name-only baseline (review-matched)",
+    "evidence_aware": "Evidence-aware matcher",
+    "evidence_conservative": "Evidence-aware, conservative"
+  },
+  "splits": {
+    "dev": {
+      "baseline": {
+        "pairs": 40,
+        "true_matches": 21,
+        "true_non_matches": 19,
+        "false_merges": {
+          "n": 2,
+          "d": 19,
+          "value": 0.105
+        },
+        "false_splits": {
+          "n": 4,
+          "d": 21,
+          "value": 0.19
+        },
+        "review_rate": {
+          "n": 5,
+          "d": 40,
+          "value": 0.125
+        },
+        "precision_auto_links": {
+          "n": 14,
+          "d": 16,
+          "value": 0.875
+        },
+        "auto_decision_accuracy": {
+          "n": 29,
+          "d": 35,
+          "value": 0.829
+        },
+        "matches_auto_linked": {
+          "n": 14,
+          "d": 21,
+          "value": 0.667
+        },
+        "decision_counts": {
+          "Link": 16,
+          "Keep separate": 19,
+          "Needs review": 5
+        },
+        "confusion": {
+          "match": {
+            "Link": 14,
+            "Needs review": 3,
+            "Keep separate": 4
+          },
+          "non_match": {
+            "Link": 2,
+            "Needs review": 2,
+            "Keep separate": 15
+          }
+        },
+        "cost": 21
+      },
+      "baseline_review_matched": {
+        "pairs": 40,
+        "true_matches": 21,
+        "true_non_matches": 19,
+        "false_merges": {
+          "n": 2,
+          "d": 19,
+          "value": 0.105
+        },
+        "false_splits": {
+          "n": 4,
+          "d": 21,
+          "value": 0.19
+        },
+        "review_rate": {
+          "n": 5,
+          "d": 40,
+          "value": 0.125
+        },
+        "precision_auto_links": {
+          "n": 14,
+          "d": 16,
+          "value": 0.875
+        },
+        "auto_decision_accuracy": {
+          "n": 29,
+          "d": 35,
+          "value": 0.829
+        },
+        "matches_auto_linked": {
+          "n": 14,
+          "d": 21,
+          "value": 0.667
+        },
+        "decision_counts": {
+          "Link": 16,
+          "Keep separate": 19,
+          "Needs review": 5
+        },
+        "confusion": {
+          "match": {
+            "Link": 14,
+            "Needs review": 3,
+            "Keep separate": 4
+          },
+          "non_match": {
+            "Link": 2,
+            "Needs review": 2,
+            "Keep separate": 15
+          }
+        },
+        "cost": 21
+      },
+      "evidence_aware": {
+        "pairs": 40,
+        "true_matches": 21,
+        "true_non_matches": 19,
+        "false_merges": {
+          "n": 1,
+          "d": 19,
+          "value": 0.053
+        },
+        "false_splits": {
+          "n": 2,
+          "d": 21,
+          "value": 0.095
+        },
+        "review_rate": {
+          "n": 4,
+          "d": 40,
+          "value": 0.1
+        },
+        "precision_auto_links": {
+          "n": 16,
+          "d": 17,
+          "value": 0.941
+        },
+        "auto_decision_accuracy": {
+          "n": 33,
+          "d": 36,
+          "value": 0.917
+        },
+        "matches_auto_linked": {
+          "n": 16,
+          "d": 21,
+          "value": 0.762
+        },
+        "decision_counts": {
+          "Link": 17,
+          "Keep separate": 19,
+          "Needs review": 4
+        },
+        "confusion": {
+          "match": {
+            "Link": 16,
+            "Needs review": 3,
+            "Keep separate": 2
+          },
+          "non_match": {
+            "Link": 1,
+            "Needs review": 1,
+            "Keep separate": 17
+          }
+        },
+        "cost": 12
+      },
+      "evidence_conservative": {
+        "pairs": 40,
+        "true_matches": 21,
+        "true_non_matches": 19,
+        "false_merges": {
+          "n": 0,
+          "d": 19,
+          "value": 0.0
+        },
+        "false_splits": {
+          "n": 2,
+          "d": 21,
+          "value": 0.095
+        },
+        "review_rate": {
+          "n": 13,
+          "d": 40,
+          "value": 0.325
+        },
+        "precision_auto_links": {
+          "n": 8,
+          "d": 8,
+          "value": 1.0
+        },
+        "auto_decision_accuracy": {
+          "n": 25,
+          "d": 27,
+          "value": 0.926
+        },
+        "matches_auto_linked": {
+          "n": 8,
+          "d": 21,
+          "value": 0.381
+        },
+        "decision_counts": {
+          "Link": 8,
+          "Keep separate": 19,
+          "Needs review": 13
+        },
+        "confusion": {
+          "match": {
+            "Link": 8,
+            "Needs review": 11,
+            "Keep separate": 2
+          },
+          "non_match": {
+            "Link": 0,
+            "Needs review": 2,
+            "Keep separate": 17
+          }
+        },
+        "cost": 17
+      }
+    },
+    "heldout": {
+      "baseline": {
+        "pairs": 33,
+        "true_matches": 16,
+        "true_non_matches": 17,
+        "false_merges": {
+          "n": 0,
+          "d": 17,
+          "value": 0.0
+        },
+        "false_splits": {
+          "n": 3,
+          "d": 16,
+          "value": 0.188
+        },
+        "review_rate": {
+          "n": 2,
+          "d": 33,
+          "value": 0.061
+        },
+        "precision_auto_links": {
+          "n": 12,
+          "d": 12,
+          "value": 1.0
+        },
+        "auto_decision_accuracy": {
+          "n": 28,
+          "d": 31,
+          "value": 0.903
+        },
+        "matches_auto_linked": {
+          "n": 12,
+          "d": 16,
+          "value": 0.75
+        },
+        "decision_counts": {
+          "Link": 12,
+          "Keep separate": 19,
+          "Needs review": 2
+        },
+        "confusion": {
+          "match": {
+            "Link": 12,
+            "Needs review": 1,
+            "Keep separate": 3
+          },
+          "non_match": {
+            "Link": 0,
+            "Needs review": 1,
+            "Keep separate": 16
+          }
+        },
+        "cost": 8
+      },
+      "baseline_review_matched": {
+        "pairs": 33,
+        "true_matches": 16,
+        "true_non_matches": 17,
+        "false_merges": {
+          "n": 0,
+          "d": 17,
+          "value": 0.0
+        },
+        "false_splits": {
+          "n": 3,
+          "d": 16,
+          "value": 0.188
+        },
+        "review_rate": {
+          "n": 2,
+          "d": 33,
+          "value": 0.061
+        },
+        "precision_auto_links": {
+          "n": 12,
+          "d": 12,
+          "value": 1.0
+        },
+        "auto_decision_accuracy": {
+          "n": 28,
+          "d": 31,
+          "value": 0.903
+        },
+        "matches_auto_linked": {
+          "n": 12,
+          "d": 16,
+          "value": 0.75
+        },
+        "decision_counts": {
+          "Link": 12,
+          "Keep separate": 19,
+          "Needs review": 2
+        },
+        "confusion": {
+          "match": {
+            "Link": 12,
+            "Needs review": 1,
+            "Keep separate": 3
+          },
+          "non_match": {
+            "Link": 0,
+            "Needs review": 1,
+            "Keep separate": 16
+          }
+        },
+        "cost": 8
+      },
+      "evidence_aware": {
+        "pairs": 33,
+        "true_matches": 16,
+        "true_non_matches": 17,
+        "false_merges": {
+          "n": 0,
+          "d": 17,
+          "value": 0.0
+        },
+        "false_splits": {
+          "n": 3,
+          "d": 16,
+          "value": 0.188
+        },
+        "review_rate": {
+          "n": 4,
+          "d": 33,
+          "value": 0.121
+        },
+        "precision_auto_links": {
+          "n": 11,
+          "d": 11,
+          "value": 1.0
+        },
+        "auto_decision_accuracy": {
+          "n": 26,
+          "d": 29,
+          "value": 0.897
+        },
+        "matches_auto_linked": {
+          "n": 11,
+          "d": 16,
+          "value": 0.688
+        },
+        "decision_counts": {
+          "Link": 11,
+          "Keep separate": 18,
+          "Needs review": 4
+        },
+        "confusion": {
+          "match": {
+            "Link": 11,
+            "Needs review": 2,
+            "Keep separate": 3
+          },
+          "non_match": {
+            "Link": 0,
+            "Needs review": 2,
+            "Keep separate": 15
+          }
+        },
+        "cost": 10
+      },
+      "evidence_conservative": {
+        "pairs": 33,
+        "true_matches": 16,
+        "true_non_matches": 17,
+        "false_merges": {
+          "n": 0,
+          "d": 17,
+          "value": 0.0
+        },
+        "false_splits": {
+          "n": 3,
+          "d": 16,
+          "value": 0.188
+        },
+        "review_rate": {
+          "n": 10,
+          "d": 33,
+          "value": 0.303
+        },
+        "precision_auto_links": {
+          "n": 5,
+          "d": 5,
+          "value": 1.0
+        },
+        "auto_decision_accuracy": {
+          "n": 20,
+          "d": 23,
+          "value": 0.87
+        },
+        "matches_auto_linked": {
+          "n": 5,
+          "d": 16,
+          "value": 0.312
+        },
+        "decision_counts": {
+          "Link": 5,
+          "Keep separate": 18,
+          "Needs review": 10
+        },
+        "confusion": {
+          "match": {
+            "Link": 5,
+            "Needs review": 8,
+            "Keep separate": 3
+          },
+          "non_match": {
+            "Link": 0,
+            "Needs review": 2,
+            "Keep separate": 15
+          }
+        },
+        "cost": 16
+      }
+    },
+    "all": {
+      "baseline": {
+        "pairs": 73,
+        "true_matches": 37,
+        "true_non_matches": 36,
+        "false_merges": {
+          "n": 2,
+          "d": 36,
+          "value": 0.056
+        },
+        "false_splits": {
+          "n": 7,
+          "d": 37,
+          "value": 0.189
+        },
+        "review_rate": {
+          "n": 7,
+          "d": 73,
+          "value": 0.096
+        },
+        "precision_auto_links": {
+          "n": 26,
+          "d": 28,
+          "value": 0.929
+        },
+        "auto_decision_accuracy": {
+          "n": 57,
+          "d": 66,
+          "value": 0.864
+        },
+        "matches_auto_linked": {
+          "n": 26,
+          "d": 37,
+          "value": 0.703
+        },
+        "decision_counts": {
+          "Link": 28,
+          "Keep separate": 38,
+          "Needs review": 7
+        },
+        "confusion": {
+          "match": {
+            "Link": 26,
+            "Needs review": 4,
+            "Keep separate": 7
+          },
+          "non_match": {
+            "Link": 2,
+            "Needs review": 3,
+            "Keep separate": 31
+          }
+        },
+        "cost": 29
+      },
+      "baseline_review_matched": {
+        "pairs": 73,
+        "true_matches": 37,
+        "true_non_matches": 36,
+        "false_merges": {
+          "n": 2,
+          "d": 36,
+          "value": 0.056
+        },
+        "false_splits": {
+          "n": 7,
+          "d": 37,
+          "value": 0.189
+        },
+        "review_rate": {
+          "n": 7,
+          "d": 73,
+          "value": 0.096
+        },
+        "precision_auto_links": {
+          "n": 26,
+          "d": 28,
+          "value": 0.929
+        },
+        "auto_decision_accuracy": {
+          "n": 57,
+          "d": 66,
+          "value": 0.864
+        },
+        "matches_auto_linked": {
+          "n": 26,
+          "d": 37,
+          "value": 0.703
+        },
+        "decision_counts": {
+          "Link": 28,
+          "Keep separate": 38,
+          "Needs review": 7
+        },
+        "confusion": {
+          "match": {
+            "Link": 26,
+            "Needs review": 4,
+            "Keep separate": 7
+          },
+          "non_match": {
+            "Link": 2,
+            "Needs review": 3,
+            "Keep separate": 31
+          }
+        },
+        "cost": 29
+      },
+      "evidence_aware": {
+        "pairs": 73,
+        "true_matches": 37,
+        "true_non_matches": 36,
+        "false_merges": {
+          "n": 1,
+          "d": 36,
+          "value": 0.028
+        },
+        "false_splits": {
+          "n": 5,
+          "d": 37,
+          "value": 0.135
+        },
+        "review_rate": {
+          "n": 8,
+          "d": 73,
+          "value": 0.11
+        },
+        "precision_auto_links": {
+          "n": 27,
+          "d": 28,
+          "value": 0.964
+        },
+        "auto_decision_accuracy": {
+          "n": 59,
+          "d": 65,
+          "value": 0.908
+        },
+        "matches_auto_linked": {
+          "n": 27,
+          "d": 37,
+          "value": 0.73
+        },
+        "decision_counts": {
+          "Link": 28,
+          "Keep separate": 37,
+          "Needs review": 8
+        },
+        "confusion": {
+          "match": {
+            "Link": 27,
+            "Needs review": 5,
+            "Keep separate": 5
+          },
+          "non_match": {
+            "Link": 1,
+            "Needs review": 3,
+            "Keep separate": 32
+          }
+        },
+        "cost": 22
+      },
+      "evidence_conservative": {
+        "pairs": 73,
+        "true_matches": 37,
+        "true_non_matches": 36,
+        "false_merges": {
+          "n": 0,
+          "d": 36,
+          "value": 0.0
+        },
+        "false_splits": {
+          "n": 5,
+          "d": 37,
+          "value": 0.135
+        },
+        "review_rate": {
+          "n": 23,
+          "d": 73,
+          "value": 0.315
+        },
+        "precision_auto_links": {
+          "n": 13,
+          "d": 13,
+          "value": 1.0
+        },
+        "auto_decision_accuracy": {
+          "n": 45,
+          "d": 50,
+          "value": 0.9
+        },
+        "matches_auto_linked": {
+          "n": 13,
+          "d": 37,
+          "value": 0.351
+        },
+        "decision_counts": {
+          "Link": 13,
+          "Keep separate": 37,
+          "Needs review": 23
+        },
+        "confusion": {
+          "match": {
+            "Link": 13,
+            "Needs review": 19,
+            "Keep separate": 5
+          },
+          "non_match": {
+            "Link": 0,
+            "Needs review": 4,
+            "Keep separate": 32
+          }
+        },
+        "cost": 33
+      }
+    }
+  },
+  "frozen_rules_sha256": "e784dc3b797041000085d955edf96affd01062df625320559f2f45ca1457b418",
+  "configs": {
+    "baseline": {
+      "link_at": 0.95,
+      "separate_below": 0.85
+    },
+    "baseline_review_matched": {
+      "link_at": 0.95,
+      "separate_below": 0.85
+    },
+    "evidence_aware": {
+      "high_name": 0.9,
+      "low_name": 0.8,
+      "support_high": 1,
+      "support_mid": 3,
+      "name_floor": 0.35,
+      "mixed_support": 2
+    },
+    "evidence_conservative": {
+      "high_name": 0.95,
+      "low_name": 0.85,
+      "support_high": 2,
+      "support_mid": 3,
+      "name_floor": 0.35,
+      "mixed_support": 2
+    }
+  },
+  "dev_metrics_at_freeze_match": true
+}

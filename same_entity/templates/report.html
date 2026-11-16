@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Same Entity?</title>
+<meta name="description" content="Multilingual organization matching on a synthetic English and Spanish fixture: a name-only baseline versus an evidence-aware matcher, with every decision traced to source excerpts.">
+<style>
+:root {
+  --bg: #efeae0;
+  --desk: #e6dfd1;
+  --paper: #fffdf8;
+  --paper-line: #ece6d8;
+  --ink: #23201b;
+  --ink-2: #5b5448;
+  --ink-3: #7c7466;
+  --rule: #d4cbb8;
+  --accent: #1f4e79;
+  --accent-soft: #dde7f1;
+  --link: #1d6b3a; --link-bg: #e1f0e5;
+  --sep: #9c2f22;  --sep-bg: #f7e1dc;
+  --rev: #8a5a00;  --rev-bg: #fbeccb;
+  --for-hl: #cdebd5; --against-hl: #f5cfc8; --neutral-hl: #e4e0f2; --flag-hl: #ffe08a;
+  --focus: #1f4e79;
+  --shadow: 0 1px 0 rgba(0,0,0,.04), 0 6px 18px -10px rgba(60,40,10,.35);
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1916; --desk: #24211d; --paper: #2b2823; --paper-line: #35312b;
+    --ink: #eee8dc; --ink-2: #c3bbab; --ink-3: #9d9585; --rule: #48423a;
+    --accent: #8fb8e0; --accent-soft: #263544;
+    --link: #8fd3a4; --link-bg: #1e3326; --sep: #f0a094; --sep-bg: #3d2420; --rev: #f0c56b; --rev-bg: #3a2e14;
+    --for-hl: #2a5236; --against-hl: #5f2c25; --neutral-hl: #3a3653; --flag-hl: #6b5517;
+    --focus: #8fb8e0; --shadow: 0 6px 18px -10px rgba(0,0,0,.8);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1916; --desk: #24211d; --paper: #2b2823; --paper-line: #35312b;
+  --ink: #eee8dc; --ink-2: #c3bbab; --ink-3: #9d9585; --rule: #48423a;
+  --accent: #8fb8e0; --accent-soft: #263544;
+  --link: #8fd3a4; --link-bg: #1e3326; --sep: #f0a094; --sep-bg: #3d2420; --rev: #f0c56b; --rev-bg: #3a2e14;
+  --for-hl: #2a5236; --against-hl: #5f2c25; --neutral-hl: #3a3653; --flag-hl: #6b5517;
+  --focus: #8fb8e0; --shadow: 0 6px 18px -10px rgba(0,0,0,.8);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--sans); }
+a { color: var(--accent); text-underline-offset: 2px; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--paper); padding: 8px 12px; z-index: 10; }
+.skip:focus { left: 8px; }
+
+header.mast { border-bottom: 1px solid var(--rule); background: var(--desk); }
+.mast .wrap { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 24px; padding-top: 22px; }
+.brand h1 { font: 600 clamp(28px, 5vw, 40px)/1.1 var(--serif); margin: 0; letter-spacing: -.01em; }
+.brand p { margin: 4px 0 0; color: var(--ink-2); max-width: 46ch; }
+.synthetic { display: inline-flex; align-items: center; gap: 6px; font: 600 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--rev); background: var(--rev-bg); border: 1px dashed var(--rev); padding: 6px 9px; border-radius: 3px; }
+nav.tabs { display: flex; gap: 2px; margin-top: 16px; width: 100%; overflow-x: auto; }
+nav.tabs button { font: 600 15px/1 var(--sans); color: var(--ink-2); background: transparent; border: 1px solid transparent; border-bottom: none;
+  padding: 12px 18px; border-radius: 6px 6px 0 0; cursor: pointer; white-space: nowrap; }
+nav.tabs button[aria-selected="true"] { background: var(--bg); color: var(--ink); border-color: var(--rule); margin-bottom: -1px; }
+nav.tabs button:hover { color: var(--ink); }
+
+main { padding: 28px 0 56px; }
+.js [role="tabpanel"][hidden] { display: none; }
+[role="tabpanel"]:focus, .reveal:focus { outline: none; }
+h2 { font: 600 26px/1.2 var(--serif); margin: 0 0 12px; }
+h3 { font: 600 19px/1.3 var(--serif); margin: 32px 0 8px; }
+h4 { font: 600 15px/1.3 var(--sans); margin: 18px 0 6px; }
+p { margin: 0 0 12px; }
+.lede { font-size: 18px; color: var(--ink-2); max-width: 70ch; }
+.muted { color: var(--ink-3); }
+.small { font-size: 14px; }
+.card { background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; box-shadow: var(--shadow); padding: 20px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
+
+/* About */
+.about { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 28px; align-items: start; }
+@media (max-width: 860px) { .about { grid-template-columns: 1fr; } }
+.about .card h3:first-child { margin-top: 0; }
+.about ul { padding-left: 20px; margin: 0 0 12px; }
+.about li { margin-bottom: 8px; }
+.links { display: grid; gap: 8px; }
+.links a { display: block; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 4px; background: var(--paper); text-decoration: none; font-weight: 600; }
+.links a span { display: block; font-weight: 400; font-size: 13px; color: var(--ink-3); }
+.boundary { border-left: 4px solid var(--accent); background: var(--accent-soft); padding: 12px 14px; border-radius: 0 4px 4px 0; font-size: 15px; }
+
+/* Demo */
+.steps { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 18px; }
+.steps button { font: 600 14px/1.2 var(--sans); padding: 9px 12px; border: 1px solid var(--rule); background: var(--paper); color: var(--ink-2); border-radius: 999px; cursor: pointer; }
+.steps button[aria-current="true"] { border-color: var(--accent); color: var(--ink); background: var(--accent-soft); }
+.steps .n { font-family: var(--mono); margin-right: 6px; color: var(--ink-3); }
+.case-head { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; margin-bottom: 12px; }
+.case-head h3 { margin: 0; }
+.chip { font: 600 12px/1 var(--mono); padding: 5px 7px; border-radius: 3px; background: var(--desk); color: var(--ink-2); border: 1px solid var(--rule); }
+.slips { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 760px) { .slips { grid-template-columns: 1fr; } }
+.slip { background: var(--paper); border: 1px solid var(--rule); border-radius: 4px; box-shadow: var(--shadow); position: relative; min-width: 0; }
+.slip header { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid var(--rule); font: 600 12px/1.3 var(--mono); color: var(--ink-3); text-transform: uppercase; letter-spacing: .05em; }
+.slip .txt { margin: 0; padding: 14px; font: 14.5px/1.75 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere;
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(1.75em - 1px), var(--paper-line) calc(1.75em - 1px), var(--paper-line) 1.75em);
+  background-position: 0 14px; }
+.slip .name { padding: 8px 14px 12px; border-top: 1px dashed var(--rule); font-size: 13px; color: var(--ink-2); }
+mark.hl { color: inherit; border-radius: 2px; padding: 0 1px; }
+mark.hl-for { background: var(--for-hl); box-shadow: inset 0 -2px 0 var(--link); }
+mark.hl-against { background: var(--against-hl); box-shadow: inset 0 -2px 0 var(--sep); }
+mark.hl-neutral { background: var(--neutral-hl); }
+mark.hl-flag { background: var(--flag-hl); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--ink-2); margin: 10px 0 0; }
+.legend mark { padding: 0 6px; }
+
+.ask { margin: 18px 0 0; padding: 16px; border: 2px dashed var(--rule); border-radius: 6px; background: var(--desk); }
+.ask fieldset { border: 0; padding: 0; margin: 0; }
+.ask legend { font: 600 17px/1.3 var(--serif); margin-bottom: 10px; padding: 0; }
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choice, .btn { font: 600 15px/1 var(--sans); padding: 12px 16px; border-radius: 4px; border: 2px solid var(--rule); background: var(--paper); color: var(--ink); cursor: pointer; min-height: 44px; }
+.choice[aria-pressed="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 2px var(--paper), inset 0 0 0 4px var(--ink); }
+.choice.c-link { color: var(--link); } .choice.c-sep { color: var(--sep); } .choice.c-rev { color: var(--rev); }
+.btn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.ask .row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 12px; }
+
+.stamp { display: inline-block; font: 800 14px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; padding: 8px 10px; border: 3px double currentColor; border-radius: 4px; transform: rotate(-2deg); }
+.stamp.s-link { color: var(--link); background: var(--link-bg); }
+.stamp.s-sep { color: var(--sep); background: var(--sep-bg); }
+.stamp.s-rev { color: var(--rev); background: var(--rev-bg); }
+.reveal { margin-top: 18px; }
+.verdicts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 760px) { .verdicts { grid-template-columns: 1fr; } }
+.verdict h4 { margin: 0 0 10px; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.verdict .rule { font: 13px/1.5 var(--mono); color: var(--ink-2); background: var(--desk); padding: 8px 10px; border-radius: 3px; margin: 10px 0; }
+.outcome { font-size: 13px; font-weight: 600; }
+.o-good { color: var(--link); } .o-bad { color: var(--sep); } .o-rev { color: var(--rev); }
+.ev { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 8px; }
+.ev li { border-left: 4px solid var(--rule); padding: 6px 10px; background: var(--paper); font-size: 14px; }
+.ev li.for { border-color: var(--link); } .ev li.against { border-color: var(--sep); } .ev li.neutral { border-color: var(--ink-3); } .ev li.missing { border-color: var(--rule); border-left-style: dotted; }
+.ev .tag { font: 700 11px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em; margin-right: 6px; }
+.ev q { font-family: var(--mono); font-size: 13px; quotes: "“" "”"; background: var(--desk); padding: 0 4px; border-radius: 2px; }
+.truth { margin-top: 16px; border: 1px solid var(--accent); border-radius: 6px; padding: 14px 16px; background: var(--accent-soft); }
+.truth strong { font-family: var(--serif); font-size: 18px; }
+
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-3); font-weight: 700; }
+td.num { font-family: var(--mono); white-space: nowrap; }
+.tablewrap { position: relative; overflow-x: auto; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; }
+.tablewrap table { min-width: 640px; }
+tr.primary td { font-weight: 600; }
+.filters { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 12px; align-items: end; }
+.filters label { display: grid; gap: 4px; font-size: 13px; color: var(--ink-2); }
+select { font: 15px var(--sans); padding: 8px; border: 1px solid var(--rule); border-radius: 4px; background: var(--paper); color: var(--ink); min-height: 40px; }
+.caselist button { font: 600 13px var(--sans); padding: 6px 10px; border: 1px solid var(--rule); border-radius: 4px; background: var(--paper); color: var(--accent); cursor: pointer; min-height: 34px; }
+
+/* Report */
+.report section { margin-bottom: 8px; }
+.callout { border-left: 4px solid var(--rev); background: var(--rev-bg); padding: 12px 14px; border-radius: 0 4px 4px 0; margin: 14px 0; }
+.toc { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; margin: 6px 0 18px; }
+.mistakes { display: grid; gap: 12px; }
+.mistake { background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 14px; }
+.mistake .meta { font: 12.5px var(--mono); color: var(--ink-3); }
+.mistake blockquote { margin: 8px 0; font: 13.5px/1.6 var(--mono); background: var(--desk); padding: 8px 10px; border-radius: 3px; white-space: pre-wrap; overflow-wrap: anywhere; }
+code { font: 0.92em var(--mono); background: var(--desk); padding: 1px 4px; border-radius: 3px; }
+pre.cmd { font: 13.5px/1.6 var(--mono); background: var(--desk); border: 1px solid var(--rule); padding: 10px 12px; border-radius: 4px; overflow-x: auto; }
+.dl { display: flex; flex-wrap: wrap; gap: 10px; }
+.dl a { display: inline-block; padding: 10px 14px; border: 1px solid var(--ink); border-radius: 4px; font-weight: 600; text-decoration: none; color: var(--ink); background: var(--paper); }
+footer { border-top: 1px solid var(--rule); padding: 18px 0 30px; color: var(--ink-3); font-size: 13.5px; }
+@media (prefers-reduced-motion: no-preference) { .reveal { animation: drop .25s ease-out; } @keyframes drop { from { opacity: 0; transform: translateY(-4px); } } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="mast">
+  <div class="wrap">
+    <div class="brand">
+      <h1>Same Entity?</h1>
+      <p>When two reports name an organization differently, is there enough evidence to link them, keep them separate, or send them for human review?</p>
+    </div>
+    <span class="synthetic" title="Every report and organization on this site is fictional">Synthetic data · fictional organizations</span>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" id="tab-about" aria-controls="about" aria-selected="true">About</button>
+      <button role="tab" id="tab-demo" aria-controls="demo" aria-selected="false" tabindex="-1">Demo</button>
+      <button role="tab" id="tab-report" aria-controls="report" aria-selected="false" tabindex="-1">Detailed Report</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+
+<section id="about" role="tabpanel" aria-labelledby="tab-about" tabindex="-1">
+  <h2>Hi, I'm Mahek Sota.</h2>
+  <p class="lede">I'm a software engineer at the University of Mississippi and a USC MS Computer Science graduate. I built <em>Same Entity?</em> as an independent project to study one question in organization matching across languages.</p>
+  <div class="about">
+    <div class="card">
+      <h3>Why I built this</h3>
+      <p>I wanted to explore what makes an automated match trustworthy when reports use different names, omit details, or disagree. Name similarity is easy to compute and easy to over-trust. In this fixture, “Fundación Agua Clara” and “Fundación Aguas Claras” normalize to the same words and are both in Lima, yet they are different organizations. I wanted a small system where every decision points to the exact words it relied on, and where <em>Needs review</em> is a legitimate answer rather than a failure.</p>
+
+      <h3>Why I'd be a good candidate</h3>
+      <p>This project builds on the kind of work I already do:</p>
+      <ul>
+        <li><strong>Extraction from messy documents.</strong> I've built Python pipelines that extract and classify references from research PDFs. The extractor here applies the same habits: explicit patterns, exact source excerpts, and recorded failures instead of silent guesses.</li>
+        <li><strong>Human review that gets faster without losing accuracy.</strong> I developed an LLM-assisted workflow that reduced manual citation review from about 30 minutes to about two. This project follows the same principle: automate the first pass and show the reviewer exactly which text each decision relied on.</li>
+        <li><strong>Pipelines at scale.</strong> I've operated Python, Kafka, and PostgreSQL pipelines that processed 50M+ records, so I design for reruns, reproducible outputs, and data that drifts from what the rules expected.</li>
+      </ul>
+
+      <h3>What I'd bring to a team</h3>
+      <ul>
+        <li><strong>Working through ambiguous inputs.</strong> I start by writing down what the inputs actually look like, decide what counts as evidence, and keep unknown values unknown instead of filling them in.</li>
+        <li><strong>Validating outputs.</strong> I hold data out before tuning, report errors with numerators and denominators, and publish results that don't flatter the approach. Here, the evidence-aware matcher did not beat the baseline on the held-out set, and the report says so.</li>
+        <li><strong>Making disagreements visible.</strong> When sources conflict, reviewers should see the conflicting excerpts side by side, not a single score.</li>
+        <li><strong>Operating pipelines after launch.</strong> I rely on deterministic reruns, focused tests for the cases that matter, and outputs that can be audited later.</li>
+      </ul>
+      <p class="boundary"><strong>Keeping claims separate.</strong> The accomplishments above come from my professional work. Every number in the Demo and Detailed Report tabs was measured only on this prototype's 73-pair synthetic fixture. This project is not evidence of production multilingual experience.</p>
+    </div>
+    <aside>
+      <h3 style="margin-top:0">Links</h3>
+      <div class="links">
+        <a href="https://impact-doc.vercel.app/" target="_blank" rel="noopener">Impact doc<span>impact-doc.vercel.app</span></a>
+        <a href="https://www.linkedin.com/in/mahek-sota/" target="_blank" rel="noopener">LinkedIn<span>linkedin.com/in/mahek-sota</span></a>
+        <a href="https://github.com/mahek-sota" target="_blank" rel="noopener">GitHub<span>github.com/mahek-sota</span></a>
+      </div>
+      <h3>Start here</h3>
+      <p class="small">Try the <a href="#demo">demo</a> first: make your own call on three cases, then compare it with both matchers. The <a href="#report">detailed report</a> has the numbers and the mistakes.</p>
+    </aside>
+  </div>
+</section>
+
+<section id="demo" role="tabpanel" aria-labelledby="tab-demo" tabindex="-1" hidden>
+  <h2>Two reports. One organization?</h2>
+  <p class="lede">Read both excerpts and make your call before you see what the matchers decided. These cases were generated by the Python pipeline ahead of time. This page does not process new documents.</p>
+  <div class="steps" role="group" aria-label="Featured cases" id="steps"></div>
+  <div id="case" aria-live="polite"></div>
+
+  <h3 id="browse-h">Browse every generated case</h3>
+  <p class="small muted">Pick any of the 73 labeled pairs to open it above, unrevealed. The list shows no decisions, so you can still make your own call first.</p>
+  <div class="filters">
+    <label>Split <select id="f-split"><option value="">All</option><option value="dev">Development</option><option value="heldout">Held-out</option></select></label>
+    <label>Challenge <select id="f-chal"><option value="">All</option></select></label>
+  </div>
+  <div class="tablewrap caselist"><table><thead><tr><th>Pair</th><th>Left report</th><th>Right report</th><th>Split</th><th>Challenge</th><th></th></tr></thead><tbody id="caserows"></tbody></table></div>
+</section>
+
+<section id="report" role="tabpanel" aria-labelledby="tab-report" tabindex="-1" hidden class="report">
+{{REPORT_HTML}}
+</section>
+
+</main>
+<footer>
+  <div class="wrap">
+    <p>Same Entity? An independent portfolio project by Mahek Sota. All reports, organizations, people, registry IDs, and <code>.example</code> domains are fictional. Cities are real places used only as locations. Generated {{GENERATED_NOTE}}.</p>
+  </div>
+</footer>
+
+<script type="application/json" id="se-data">{{DATA_JSON}}</script>
+<script>
+(function () {
+  "use strict";
+  document.documentElement.classList.add("js");
+  var D = JSON.parse(document.getElementById("se-data").textContent);
+  var SRC = D.sources, EX = D.extractions;
+  var CASES = {}; D.cases.forEach(function (c) { CASES[c.pair_id] = c; });
+
+  /* ---------- tabs & routing ---------- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  var ids = tabs.map(function (t) { return t.getAttribute("aria-controls"); });
+  function select(id, focus) {
+    if (ids.indexOf(id) < 0) id = "about";
+    tabs.forEach(function (t) {
+      var on = t.getAttribute("aria-controls") === id;
+      t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      if (on && focus) t.focus();
+    });
+  }
+  function fromHash() {
+    var h = decodeURIComponent(location.hash.replace("#", ""));
+    if (ids.indexOf(h) >= 0) return h;
+    var t = h && document.getElementById(h), p = t && t.closest('[role="tabpanel"]');
+    return p ? p.id : null;
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener("click", function () { go(t.getAttribute("aria-controls")); });
+    t.addEventListener("keydown", function (e) {
+      var j = null;
+      if (e.key === "ArrowRight") j = (i + 1) % tabs.length;
+      else if (e.key === "ArrowLeft") j = (i - 1 + tabs.length) % tabs.length;
+      else if (e.key === "Home") j = 0; else if (e.key === "End") j = tabs.length - 1;
+      if (j !== null) { e.preventDefault(); go(ids[j], true); }
+    });
+  });
+  function go(id, focus) {
+    if (location.hash !== "#" + id) history.pushState(null, "", "#" + id);
+    select(id, focus); window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", function () {
+    var h = fromHash(); if (!h) return;
+    select(h);
+    if (ids.indexOf(location.hash.slice(1)) >= 0) window.scrollTo(0, 0);
+    else { var t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }
+  });
+  window.addEventListener("popstate", function () { select(fromHash() || "about"); });
+  // in-page links to tabs (e.g. "try the demo")
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var id = a.getAttribute("href").slice(1);
+    if (ids.indexOf(id) >= 0) { e.preventDefault(); go(id); }
+  });
+  select(fromHash() || "about");
+  (function () {
+    var h = location.hash.slice(1), t = h && ids.indexOf(h) < 0 && document.getElementById(h);
+    if (t) t.scrollIntoView(); else window.scrollTo(0, 0);  // tab hashes open at the top of the page
+    window.addEventListener("load", function () { if (ids.indexOf(location.hash.slice(1)) >= 0) window.scrollTo(0, 0); });
+  })();
+
+  /* ---------- helpers ---------- */
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  function el(html) { var t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
+  var STAMP = {"Link": "s-link", "Keep separate": "s-sep", "Needs review": "s-rev"};
+  function stamp(d) { return '<span class="stamp ' + STAMP[d] + '">' + esc(d) + "</span>"; }
+  function outcomeHtml(o) {
+    var cls = o === "review" ? "o-rev" : (o.indexOf("false") === 0 ? "o-bad" : "o-good");
+    var txt = o === "review" ? "Sent to review (no automatic error)" : o.charAt(0).toUpperCase() + o.slice(1);
+    return '<span class="outcome ' + cls + '">' + esc(txt) + "</span>";
+  }
+  function nameOf(sid) { var x = EX[sid]; return x && x.name ? x.name.value : "(no name extracted)"; }
+  var CHAL = D.challenge_labels;
+
+  /* ---------- highlighting ---------- */
+  function spansFor(c, sid) {
+    var out = [];
+    function add(ref, cls, title) { if (ref && ref.source_id === sid) out.push({s: ref.start, e: ref.end, cls: cls, title: title}); }
+    var ea = c.evidence_aware;
+    ea.evidence_against.forEach(function (i) { add(i.left, "against", i.detail); add(i.right, "against", i.detail); });
+    ea.evidence_for.forEach(function (i) { add(i.left, "for", i.detail); add(i.right, "for", i.detail); });
+    ea.evidence_neutral.forEach(function (i) { add(i.left, "neutral", i.detail); add(i.right, "neutral", i.detail); });
+    (EX[sid].flags || []).forEach(function (f) { out.push({s: f.start, e: f.end, cls: "flag", title: f.note}); });
+    (EX[sid].failures || []).forEach(function (f) { if (f.start != null) out.push({s: f.start, e: f.end, cls: "neutral", title: "Extraction failure: " + f.reason}); });
+    out.sort(function (a, b) { return a.s - b.s || (b.e - b.s) - (a.e - a.s); });
+    var kept = [], end = -1;
+    out.forEach(function (x) { if (x.s >= end) { kept.push(x); end = x.e; } });
+    return kept;
+  }
+  function renderText(sid, spans) {
+    var t = SRC[sid].text, html = "", pos = 0;
+    (spans || []).forEach(function (x) {
+      html += esc(t.slice(pos, x.s)) + '<mark class="hl hl-' + x.cls + '" title="' + esc(x.title) + '">' + esc(t.slice(x.s, x.e)) + "</mark>";
+      pos = x.e;
+    });
+    return html + esc(t.slice(pos));
+  }
+  function slip(sid, side, spans) {
+    var s = SRC[sid];
+    return '<article class="slip" aria-label="' + side + ' report ' + sid + '"><header><span>' + side + " · " + sid + '</span><span>' +
+      (s.lang === "es" ? "Spanish" : "English") + " · synthetic</span></header>" +
+      '<pre class="txt">' + renderText(sid, spans) + "</pre></article>";
+  }
+
+  /* ---------- evidence list ---------- */
+  function q(ref) { return ref ? "<q>" + esc(ref.excerpt) + "</q> <span class=\"muted small\">(" + esc(ref.source_id) + ")</span>" : '<span class="muted small">not stated</span>'; }
+  function evItems(res, kind) {
+    var tags = {"for": "For", "against": "Against", "neutral": "Neutral"};
+    return res["evidence_" + kind].map(function (i) {
+      return '<li class="' + kind + '"><span class="tag">' + tags[kind] + "</span>" + esc(i.detail) +
+        (i.weight ? ' <span class="muted small">(+' + i.weight + " pt)</span>" : "") + "<br>" + q(i.left) + " · " + q(i.right) + "</li>";
+    }).join("");
+  }
+  function missingItems(res, c) {
+    return res.missing.map(function (m) {
+      var where = !m.left_present && !m.right_present ? "both reports" : (!m.left_present ? c.left : c.right);
+      return '<li class="missing"><span class="tag">Missing</span>' + esc(m.field.replace(/_/g, " ")) + " not stated in " + esc(where) + ". Left unknown, not counted against a match.</li>";
+    }).join("");
+  }
+
+  /* ---------- case view ---------- */
+  var current = null, guess = null;
+  function showCase(pid, featuredIdx) {
+    var c = CASES[pid]; current = pid; guess = null;
+    var f = featuredIdx != null ? D.featured[featuredIdx] : null;
+    var host = document.getElementById("case");
+    host.innerHTML =
+      '<div class="case-head"><h3>' + esc(f ? f.title : "Case " + pid) + '</h3><span class="chip">' + esc(pid) + '</span><span class="chip">' +
+      (c.split === "heldout" ? "held-out" : "development") + " split</span></div>" +
+      (f ? '<p class="small">' + esc(f.prompt) + "</p>" : "") +
+      '<div class="slips" id="slips">' + slip(c.left, "Left", []) + slip(c.right, "Right", []) + "</div>" +
+      '<form class="ask" id="ask" onsubmit="return false"><fieldset><legend>Your call: do these reports name the same organization?</legend>' +
+      '<div class="choices">' +
+      '<button type="button" class="choice c-link" aria-pressed="false" data-d="Link">Link</button>' +
+      '<button type="button" class="choice c-sep" aria-pressed="false" data-d="Keep separate">Keep separate</button>' +
+      '<button type="button" class="choice c-rev" aria-pressed="false" data-d="Needs review">Needs review</button></div>' +
+      '<div class="row"><button type="button" class="btn primary" id="reveal" disabled>Reveal decisions</button>' +
+      '<span class="small muted" id="askhint">Choose an option to unlock the reveal.</span></div></fieldset></form>' +
+      '<div id="revealed"></div>';
+    Array.prototype.forEach.call(host.querySelectorAll(".choice"), function (b) {
+      b.addEventListener("click", function () {
+        guess = b.getAttribute("data-d");
+        Array.prototype.forEach.call(host.querySelectorAll(".choice"), function (x) { x.setAttribute("aria-pressed", x === b); });
+        var r = document.getElementById("reveal"); r.disabled = false;
+        document.getElementById("askhint").textContent = "You chose “" + guess + "”.";
+      });
+    });
+    document.getElementById("reveal").addEventListener("click", function () { reveal(pid); });
+  }
+  function reveal(pid) {
+    var c = CASES[pid], b = c.baseline, e = c.evidence_aware;
+    document.getElementById("slips").innerHTML = slip(c.left, "Left", spansFor(c, c.left)) + slip(c.right, "Right", spansFor(c, c.right));
+    var truthSame = c.label === "match";
+    var sim = function (x) { return x == null ? "n/a" : x.toFixed(2); };
+    var html =
+      '<div class="reveal" tabindex="-1" id="reveal-box">' +
+      '<div class="legend" aria-label="Highlight legend"><span><mark class="hl hl-for">text</mark> supports a match</span><span><mark class="hl hl-against">text</mark> conflicts</span><span><mark class="hl hl-neutral">text</mark> compared, not decisive</span><span><mark class="hl hl-flag">text</mark> instruction-like text, treated as data</span></div>' +
+      '<div class="verdicts" style="margin-top:14px">' +
+      '<div class="card verdict"><h4><span>Name-only baseline</span>' + stamp(b.decision) + "</h4>" +
+      '<div class="small">Name similarity ' + sim(b.name_similarity) + ' <span class="muted">(0–1 heuristic, not a probability)</span></div>' +
+      '<div class="rule">' + esc(b.rule) + ": " + esc(b.rule_text) + "</div>" + outcomeHtml(b.outcome) + "</div>" +
+      '<div class="card verdict"><h4><span>Evidence-aware matcher</span>' + stamp(e.decision) + "</h4>" +
+      '<div class="small">Best name similarity ' + sim(e.name_similarity) + " · support points " + e.support_points +
+      " · conflicts: " + (e.conflicts.length ? esc(e.conflicts.join(", ").replace(/_/g, " ")) : "none") + "</div>" +
+      '<div class="rule">' + esc(e.rule) + ": " + esc(e.rule_text) + "</div>" + outcomeHtml(e.outcome) +
+      '<p class="small muted" style="margin:8px 0 0">Conservative variant (a shared city alone never links): ' + esc(c.evidence_conservative.decision) + ".</p></div></div>" +
+      '<h4>Evidence the evidence-aware matcher used</h4><ul class="ev">' +
+      evItems(e, "for") + evItems(e, "against") + evItems(e, "neutral") + missingItems(e, c) + "</ul>" +
+      flagsNote(c) +
+      '<div class="truth" role="note"><div class="small muted">Fictional ground truth, revealed separately from both decisions</div>' +
+      "<strong>" + (truthSame ? "Same organization" : "Different organizations") + "</strong>" +
+      '<p style="margin:6px 0 0">' + esc(c.label_note) + "</p>" +
+      '<p class="small" style="margin:6px 0 0">Your call: <strong>' + esc(guess) + "</strong>. " + yourOutcome(c) + "</p></div>" +
+      "</div>";
+    document.getElementById("revealed").innerHTML = html;
+    document.getElementById("reveal").disabled = true;
+    Array.prototype.forEach.call(document.querySelectorAll("#ask .choice"), function (x) { x.disabled = true; });
+    document.getElementById("reveal-box").focus({preventScroll: true});
+  }
+  function flagsNote(c) {
+    var fl = [];
+    [c.left, c.right].forEach(function (sid) { (EX[sid].flags || []).forEach(function (f) { fl.push([sid, f]); }); });
+    if (!fl.length) return "";
+    return '<p class="callout small"><strong>Embedded instruction found.</strong> ' + fl.map(function (p) { return p[0] + ": <q>" + esc(p[1].excerpt) + "</q>"; }).join(" ") +
+      "<br>It was recorded as a flag and highlighted. Neither matcher reads free text or flags, so the instruction cannot change a decision. A test confirms that removing the line leaves every decision unchanged.</p>";
+  }
+  function yourOutcome(c) {
+    if (guess === "Needs review") return "Routing to review avoids an automatic error and adds manual work.";
+    var right = (guess === "Link") === (c.label === "match");
+    return right ? "That matches the fictional ground truth." : "That would have been a " + (guess === "Link" ? "false merge." : "false split.");
+  }
+
+  /* ---------- featured steps ---------- */
+  var steps = document.getElementById("steps");
+  D.featured.forEach(function (f, i) {
+    var b = el('<button type="button"><span class="n">' + (i + 1) + "</span>" + esc(f.short) + "</button>");
+    b.addEventListener("click", function () { setStep(i); });
+    steps.appendChild(b);
+  });
+  function setStep(i) {
+    Array.prototype.forEach.call(steps.children, function (b, j) { b.setAttribute("aria-current", i === j); });
+    showCase(D.featured[i].pair_id, i);
+  }
+  setStep(0);
+
+  /* ---------- browser ---------- */
+  var fs = document.getElementById("f-split"), fc = document.getElementById("f-chal"), rows = document.getElementById("caserows");
+  Object.keys(CHAL).sort().forEach(function (k) { fc.appendChild(el('<option value="' + esc(k) + '">' + esc(CHAL[k]) + "</option>")); });
+  function renderRows() {
+    rows.innerHTML = "";
+    D.cases.forEach(function (c) {
+      if (fs.value && c.split !== fs.value) return;
+      if (fc.value && c.challenge !== fc.value) return;
+      var tr = el("<tr><td class=\"num\">" + esc(c.pair_id) + "</td><td>" + esc(nameOf(c.left)) + ' <span class="muted small">' + esc(c.left) + "</span></td><td>" +
+        esc(nameOf(c.right)) + ' <span class="muted small">' + esc(c.right) + "</span></td><td>" + (c.split === "heldout" ? "held-out" : "dev") +
+        "</td><td>" + esc(CHAL[c.challenge] || c.challenge) + '</td><td><button type="button">Inspect <span class="sr">' + esc(c.pair_id) + "</span></button></td></tr>");
+      tr.querySelector("button").addEventListener("click", function () {
+        Array.prototype.forEach.call(steps.children, function (b) { b.setAttribute("aria-current", "false"); });
+        showCase(c.pair_id, null);
+        document.getElementById("case").scrollIntoView({behavior: "smooth", block: "start"});
+        var first = document.querySelector("#case .choice"); if (first) first.focus({preventScroll: true});
+      });
+      rows.appendChild(tr);
+    });
+  }
+  fs.addEventListener("change", renderRows); fc.addEventListener("change", renderRows); renderRows();
+
+  /* ---------- downloads (built from embedded data so the page works standalone) ---------- */
+  function blobLink(id, content, type) {
+    var a = document.getElementById(id); if (!a) return;
+    try { a.href = URL.createObjectURL(new Blob([content], {type: type})); } catch (err) { /* keep static href */ }
+  }
+  blobLink("dl-json", JSON.stringify(D.cases, null, 2) + "\n", "application/json");
+  blobLink("dl-csv", D.cases_csv, "text/csv");
+  blobLink("dl-metrics", JSON.stringify(D.metrics, null, 2) + "\n", "application/json");
+})();
+</script>
+<style>.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }</style>
+</body>
+</html>

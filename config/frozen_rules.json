@@ -1,0 +1,326 @@
+{
+  "frozen_on": "dev split only",
+  "dev_pair_ids": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P15",
+    "P16",
+    "P17",
+    "P18",
+    "P19",
+    "P20",
+    "P21",
+    "P22",
+    "P23",
+    "P24",
+    "P25",
+    "P26",
+    "P27",
+    "P28",
+    "P29",
+    "P30",
+    "P31",
+    "P32",
+    "P33",
+    "P34",
+    "P35",
+    "P36",
+    "P37",
+    "P38",
+    "P39",
+    "P40"
+  ],
+  "dev_pair_ids_sha256": "627f025d9d55ceddb277ed3dbedbad877e37122c96722d1542200696c916e746",
+  "objective": "cost = 4*false_merges + 2*false_splits + 1*reviews (dev only)",
+  "cost_weights": {
+    "false_merge": 4,
+    "false_split": 2,
+    "review": 1
+  },
+  "grid": {
+    "similarity": [
+      0.3,
+      0.35,
+      0.4,
+      0.45,
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95,
+      1.0
+    ],
+    "support_points": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "tie_break": "closest to the centroid of all minimum-cost settings (parameters scaled by range)",
+  "evidence_aware": {
+    "config": {
+      "high_name": 0.9,
+      "low_name": 0.8,
+      "support_high": 1,
+      "support_mid": 3,
+      "name_floor": 0.35,
+      "mixed_support": 2
+    },
+    "dev_metrics": {
+      "pairs": 40,
+      "true_matches": 21,
+      "true_non_matches": 19,
+      "false_merges": {
+        "n": 1,
+        "d": 19,
+        "value": 0.053
+      },
+      "false_splits": {
+        "n": 2,
+        "d": 21,
+        "value": 0.095
+      },
+      "review_rate": {
+        "n": 4,
+        "d": 40,
+        "value": 0.1
+      },
+      "precision_auto_links": {
+        "n": 16,
+        "d": 17,
+        "value": 0.941
+      },
+      "auto_decision_accuracy": {
+        "n": 33,
+        "d": 36,
+        "value": 0.917
+      },
+      "matches_auto_linked": {
+        "n": 16,
+        "d": 21,
+        "value": 0.762
+      },
+      "decision_counts": {
+        "Link": 17,
+        "Keep separate": 19,
+        "Needs review": 4
+      },
+      "confusion": {
+        "match": {
+          "Link": 16,
+          "Needs review": 3,
+          "Keep separate": 2
+        },
+        "non_match": {
+          "Link": 1,
+          "Needs review": 1,
+          "Keep separate": 17
+        }
+      },
+      "cost": 12
+    },
+    "tied_settings": 9
+  },
+  "evidence_conservative": {
+    "config": {
+      "high_name": 0.95,
+      "low_name": 0.85,
+      "support_high": 2,
+      "support_mid": 3,
+      "name_floor": 0.35,
+      "mixed_support": 2
+    },
+    "dev_metrics": {
+      "pairs": 40,
+      "true_matches": 21,
+      "true_non_matches": 19,
+      "false_merges": {
+        "n": 0,
+        "d": 19,
+        "value": 0.0
+      },
+      "false_splits": {
+        "n": 2,
+        "d": 21,
+        "value": 0.095
+      },
+      "review_rate": {
+        "n": 13,
+        "d": 40,
+        "value": 0.325
+      },
+      "precision_auto_links": {
+        "n": 8,
+        "d": 8,
+        "value": 1.0
+      },
+      "auto_decision_accuracy": {
+        "n": 25,
+        "d": 27,
+        "value": 0.926
+      },
+      "matches_auto_linked": {
+        "n": 8,
+        "d": 21,
+        "value": 0.381
+      },
+      "decision_counts": {
+        "Link": 8,
+        "Keep separate": 19,
+        "Needs review": 13
+      },
+      "confusion": {
+        "match": {
+          "Link": 8,
+          "Needs review": 11,
+          "Keep separate": 2
+        },
+        "non_match": {
+          "Link": 0,
+          "Needs review": 2,
+          "Keep separate": 17
+        }
+      },
+      "cost": 17
+    },
+    "selection": "lowest dev cost among evidence-aware settings with support_high >= 2"
+  },
+  "baseline": {
+    "config": {
+      "link_at": 0.95,
+      "separate_below": 0.85
+    },
+    "dev_metrics": {
+      "pairs": 40,
+      "true_matches": 21,
+      "true_non_matches": 19,
+      "false_merges": {
+        "n": 2,
+        "d": 19,
+        "value": 0.105
+      },
+      "false_splits": {
+        "n": 4,
+        "d": 21,
+        "value": 0.19
+      },
+      "review_rate": {
+        "n": 5,
+        "d": 40,
+        "value": 0.125
+      },
+      "precision_auto_links": {
+        "n": 14,
+        "d": 16,
+        "value": 0.875
+      },
+      "auto_decision_accuracy": {
+        "n": 29,
+        "d": 35,
+        "value": 0.829
+      },
+      "matches_auto_linked": {
+        "n": 14,
+        "d": 21,
+        "value": 0.667
+      },
+      "decision_counts": {
+        "Link": 16,
+        "Keep separate": 19,
+        "Needs review": 5
+      },
+      "confusion": {
+        "match": {
+          "Link": 14,
+          "Needs review": 3,
+          "Keep separate": 4
+        },
+        "non_match": {
+          "Link": 2,
+          "Needs review": 2,
+          "Keep separate": 15
+        }
+      },
+      "cost": 21
+    }
+  },
+  "baseline_review_matched": {
+    "config": {
+      "link_at": 0.95,
+      "separate_below": 0.85
+    },
+    "dev_metrics": {
+      "pairs": 40,
+      "true_matches": 21,
+      "true_non_matches": 19,
+      "false_merges": {
+        "n": 2,
+        "d": 19,
+        "value": 0.105
+      },
+      "false_splits": {
+        "n": 4,
+        "d": 21,
+        "value": 0.19
+      },
+      "review_rate": {
+        "n": 5,
+        "d": 40,
+        "value": 0.125
+      },
+      "precision_auto_links": {
+        "n": 14,
+        "d": 16,
+        "value": 0.875
+      },
+      "auto_decision_accuracy": {
+        "n": 29,
+        "d": 35,
+        "value": 0.829
+      },
+      "matches_auto_linked": {
+        "n": 14,
+        "d": 21,
+        "value": 0.667
+      },
+      "decision_counts": {
+        "Link": 16,
+        "Keep separate": 19,
+        "Needs review": 5
+      },
+      "confusion": {
+        "match": {
+          "Link": 14,
+          "Needs review": 3,
+          "Keep separate": 4
+        },
+        "non_match": {
+          "Link": 2,
+          "Needs review": 2,
+          "Keep separate": 15
+        }
+      },
+      "cost": 21
+    },
+    "target_review_rate": 0.1,
+    "selection": "baseline setting with dev review rate within ±0.05 of the evidence-aware rate (or the closest available), lowest 4*FM + 2*FS"
+  }
+}

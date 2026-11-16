@@ -1,0 +1,74 @@
+pair_id,left,right,label,challenge,note
+P01,S001,S002,match,translated_name,Spanish and English names for the same fictional foundation; the English report also quotes the Spanish name.
+P02,S001,S003,match,abbreviation,The second report uses only the acronym FAC that the first report declares.
+P03,S002,S003,match,abbreviation,English name versus bare acronym; no shared identifier.
+P04,S001,S004,non_match,similar_name_shared_city,"Agua Clara vs Aguas Claras: near-identical names, both in Lima, different founding years."
+P05,S002,S005,non_match,similar_name_shared_city,"Both translate to 'Clear Water Foundation' and both are in Lima, but they are different organizations."
+P06,S003,S004,non_match,abbreviation_collision,The acronym FAC also fits Fundación Aguas Claras; the websites differ.
+P07,S004,S005,match,translated_name,Spanish name versus partially translated English name; only the city corroborates.
+P08,S003,S005,non_match,easy_non_match,Acronym does not fit the other name.
+P09,S006,S007,match,translated_name,Spanish and English names for the same cooperative; same coordinator.
+P10,S006,S008,match,alias,The second report uses the declared alias Red Semillas and the same registry ID.
+P11,S007,S008,match,alias,English name versus Spanish alias with no direct link between them.
+P12,S006,S009,non_match,similar_name_different_city,Cooperative versus a seed company with nearly the same name; registry IDs differ.
+P13,S007,S010,non_match,similar_name_different_city,"Same core name, different cities and founding years."
+P14,S009,S010,match,missing_fields,The second report drops the legal suffix and the registry ID.
+P15,S008,S010,non_match,easy_non_match,Alias versus a different company; different cities.
+P16,S011,S012,match,abbreviation,Full Spanish name with declared acronym versus the acronym alone.
+P17,S011,S013,match,missing_fields,Translated name; the English note has no location or other details.
+P18,S011,S014,non_match,similar_name_different_city,IASC versus IAS: overlapping names in different cities.
+P19,S012,S014,non_match,easy_non_match,Different acronyms and cities.
+P20,S013,S015,non_match,similar_name_missing_fields,Two English names that differ by one word; one report has no city.
+P21,S014,S015,match,translated_name,Spanish and English names; Bogotá spelled with and without the accent.
+P22,S012,S013,match,abbreviation,Spanish acronym versus English full name; the English initials do not spell IASC.
+P23,S016,S017,match,translated_name,Spanish and English names; same city and founding year.
+P24,S016,S018,non_match,embedded_instruction,The second report contains text telling the system to approve a link to the first. Registry IDs differ.
+P25,S017,S019,non_match,similar_name_different_city,Northern versus United rural women's associations in different cities.
+P26,S018,S019,match,embedded_instruction,"Same organization; the Spanish report also contains an embedded instruction, which should be treated as data."
+P27,S016,S019,non_match,similar_name_different_city,Different associations in different cities.
+P28,S020,S021,match,conflicting_evidence,"Same network and director, but a newsletter reports a different founding year (2015 vs 2014)."
+P29,S020,S022,match,translated_name,Translated name with the same website.
+P30,S021,S022,match,missing_fields,Same English name and city; little else.
+P31,S020,S023,non_match,similar_name_different_city,Red Puentes Migrantes versus Puentes para Migrantes in another city.
+P32,S022,S024,non_match,similar_name_different_city,Migrant Bridges Network versus Bridges for Migrants in another city.
+P33,S023,S024,match,translated_name,Spanish and English names; same city.
+P34,S021,S024,non_match,similar_name_different_city,Different organizations in different cities.
+P35,S025,S026,match,low_quality_text,The second report is a damaged scan; most labels are unreadable.
+P36,S025,S027,match,low_quality_text,"Lowercase phone transcription, same name, city, and founding year."
+P37,S025,S028,non_match,similar_name_shared_city,"Collective versus a solar company, both called Luz Verde, both in Medellín; registry IDs differ."
+P38,S027,S029,non_match,similar_name_shared_city,Collective versus solar company; only the city overlaps.
+P39,S028,S029,match,translated_name,Spanish and English versions of the company name; same city.
+P40,S026,S028,non_match,low_quality_text,Damaged scan versus the solar company.
+P41,S030,S031,match,translated_name,"Spanish and English names; same director, accent dropped in one report."
+P42,S030,S034,match,missing_fields,Prose mention with name and city only.
+P43,S031,S032,non_match,embedded_instruction,Hope Center versus New Hope Center in the same city; the second report tells the system to approve the link.
+P44,S030,S033,non_match,similar_name_shared_city,"Centro Esperanza versus Centro Nueva Esperanza, both in Quito, different founding years."
+P45,S032,S033,match,embedded_instruction,Same organization in English and Spanish; the English report contains an embedded instruction.
+P46,S031,S033,non_match,similar_name_shared_city,Hope Center versus Centro Nueva Esperanza; same city.
+P47,S034,S033,non_match,similar_name_shared_city,Prose mention of Centro Esperanza versus Centro Nueva Esperanza; same city.
+P48,S035,S036,match,conflicting_evidence,The foundation moved from Seville to Valencia; same founding year.
+P49,S035,S037,match,conflicting_evidence,"Same name, but the reports place the foundation in different cities (it relocated)."
+P50,S036,S037,match,translated_name,English name versus Spanish name; same (new) city.
+P51,S035,S038,non_match,similar_name_shared_city,Foundation versus publisher sharing the words Tierra Viva; both in Seville.
+P52,S037,S039,non_match,similar_name_different_city,Foundation versus publisher; different cities.
+P53,S038,S039,match,translated_name,Spanish and English names of the publisher; Sevilla/Seville.
+P54,S035,S039,non_match,similar_name_shared_city,Foundation versus publisher; both in Seville.
+P55,S040,S041,match,translated_name,Spanish and English names; same city and president.
+P56,S040,S042,non_match,shared_leader,Cooperative versus association with the same president and city.
+P57,S041,S042,non_match,shared_leader,Cooperative versus association with the same president and city.
+P58,S042,S043,match,translated_name,Spanish and English names; same city.
+P59,S041,S043,non_match,similar_name_shared_city,Blue Bay Fishers Cooperative versus Association; same city.
+P60,S040,S043,non_match,similar_name_shared_city,Cooperative versus association; same city.
+P61,S044,S045,match,translated_name,"Spanish name versus English name using 'Growers' instead of 'Producers'."
+P62,S044,S046,match,abbreviation,Declared acronym APCO versus a prose mention of APCO in the same city.
+P63,S045,S046,match,abbreviation,English full name versus Spanish acronym.
+P64,S044,S047,non_match,abbreviation_collision,Two different organizations both declare the acronym APCO.
+P65,S046,S047,non_match,abbreviation_collision,"Bare APCO versus the other APCO, in a different city."
+P66,S047,S048,match,translated_name,Spanish and English names; same city.
+P67,S045,S048,non_match,easy_non_match,Different coffee organizations in different cities.
+P68,S049,S050,match,translated_name,Spanish and English names; same registry ID.
+P69,S049,S051,match,missing_fields,Short name with no city or identifier.
+P70,S049,S052,non_match,similar_name_shared_city,Collective versus committee in the same city; registry IDs differ.
+P71,S050,S053,non_match,similar_name_missing_fields,Collective versus committee; one report has no city.
+P72,S052,S053,match,translated_name,Spanish and English names; same city.
+P73,S051,S053,non_match,similar_name_missing_fields,Short collective name versus the committee; one report has no city.
